@@ -80,6 +80,8 @@ data:
     # autoupdate doesn't make sense in Kubernetes. However, outside of Kubernetes, we strongly
     # recommend using autoupdate.
     no-autoupdate: true
+    originRequest:
+      noTLSVerify: true
     # The `ingress` block tells cloudflared which local service to route incoming
     # requests to. For more about ingress rules, see
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
@@ -93,6 +95,4 @@ data:
     # in the connection from cloudflared to your local service, not from the internet to cloudflared.
     - hostname: argocd.davafons.com
       service: http://argocd-server.argocd.svc.cluster.local:80
-    # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
-    - service: http_status:401
-
+    - service: https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443
