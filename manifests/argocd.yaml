@@ -39,3 +39,10 @@ spec:
                 name: argocd-server
                 port:
                   number: 80
+---
+resource.customizations: |
+    extensions/Ingress:
+        health.lua: |
+          hs = {}
+          hs.status = "Healthy"
+          return hs
