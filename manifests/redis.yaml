@@ -18,7 +18,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mt/nadedb/"
+    path: "/mnt/redis/"
 ---
 apiVersion: apps/v1
 kind: StatefulSet
