@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: uptime-kuma
-          image: louislam/uptime-kuma:1.11.4
+          image: louislam/uptime-kuma:latest
           env:
             - name: UPTIME_KUMA_PORT
               value: "3001"
@@ -90,13 +90,6 @@ spec:
             path: /
             backend:
               service:
-                name: uptime-kuma-server
+                name: uptime-kuma-service
                 port:
-                  number: 80
----
-resource.customizations: |
-    extensions/Ingress:
-        health.lua: |
-          hs = {}
-          hs.status = "Healthy"
-          return hs
+                  number: 3001
