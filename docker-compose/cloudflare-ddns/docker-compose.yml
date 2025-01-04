@@ -10,6 +10,6 @@ services:
     cap_drop: [all]
     security_opt: [no-new-privileges:true]
     environment:
-#      - CLOUDFLARE_API_TOKEN={REPLACE}
+      - CLOUDFLARE_API_TOKEN={REPLACE}
       - DOMAINS=dynamic2.davafons.com
       - PROXIED=true
