@@ -17,4 +17,4 @@ services:
       - qbittorrent-pia-vpn-default
 
 volumes:
-  sonarr
+  sonarr:
