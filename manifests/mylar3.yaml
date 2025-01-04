@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: mylar3-komga-pv
+  name: mylar3-brigadasos-shared-pv
   labels:
     type: local
     app: mylar3
@@ -12,12 +12,12 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/media/komga"
+    path: "/mnt/brigadasos-shared"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: mylar3-komga-pv-claim
+  name: mylar3-brigadasos-shared-pv-claim
   labels:
     app: mylar3
 spec:
@@ -27,36 +27,6 @@ spec:
   resources:
     requests:
       storage: 100Gi
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: mylar3-import-pv
-  labels:
-    type: local
-    app: mylar3
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/mnt/media/import"
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: mylar3-import-pv-claim
-  labels:
-    app: mylar3
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 50Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -93,19 +63,14 @@ spec:
           ports:
             - containerPort: 8090
           volumeMounts:
-          - mountPath: /comics
-            name: mylar3-komga-pv-vol
-          - mountPath: /downloads
-            name: mylar3-import-pv-vol
+          - mountPath: /shared
+            name: mylar3-brigadasos-shared-pv-vol
           - mountPath: /config
             name: mylar3-config-pv-vol
       volumes:
-        - name: mylar3-komga-pv-vol
+        - name: mylar3-brigadasos-shared-pv-vol
           persistentVolumeClaim:
-            claimName: mylar3-komga-pv-claim
-        - name: mylar3-import-pv-vol
-          persistentVolumeClaim:
-            claimName: mylar3-import-pv-claim
+            claimName: mylar3-brigadasos-shared-pv-claim
         - name: mylar3-config-pv-vol
           persistentVolumeClaim:
             claimName: mylar3-config-pv-claim
