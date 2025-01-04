@@ -1,4 +1,26 @@
 services:
+  pia-qbittorrent:
+    image: j4ym0/pia-qbittorrent
+    container_name: pia-qbittorrent
+    restart: unless-stopped
+    cap_add:
+        - NET_ADMIN
+    environment:
+        - UID=1000
+        - GID=100
+        - REGION=Japan
+        - USER=${PIA_USER}
+        - PASSWORD=${PIA_PASSWORD}
+        - PORT_FORWARDING=true
+        - TZ=Asia/Tokyo
+    volumes:
+        - pia-qbittorrent:/config
+        - /share/Download:/downloads
+    ports:
+        - 8888:8888
+    networks:
+      - qbittorrent-pia-vpn_default
+
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -19,6 +41,7 @@ services:
 volumes:
   sonarr:
     external: true
+  pia-qbittorrent:
 
 networks:
   qbittorrent-pia-vpn_default:
