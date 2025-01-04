@@ -13,7 +13,13 @@ services:
       - sonarr:/config
       - /share/Download:/tv
       - /share/Media/Series:/downloads
+    networks:
+      - qbittorrent-pia-vpn_default
 
 volumes:
   sonarr:
+    external: true
+
+networks:
+  qbittorrent-pia-vpn_default:
     external: true
