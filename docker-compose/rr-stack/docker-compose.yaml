@@ -16,4 +16,4 @@ services:
 
 volumes:
   sonarr:
-    extenral: true
+    external: true
