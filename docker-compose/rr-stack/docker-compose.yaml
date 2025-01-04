@@ -12,6 +12,7 @@ services:
         - USER=${PIA_USER}
         - PASSWORD=${PIA_PASSWORD}
         - PORT_FORWARDING=true
+        - LEGACY_IPTABLES=true
         - TZ=Asia/Tokyo
     volumes:
         - /share/appdata/qbittorrent-vpn-pia:/config
