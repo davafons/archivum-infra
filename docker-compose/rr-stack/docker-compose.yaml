@@ -11,8 +11,8 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - sonarr:/config
-      - /share/Download:/tv
-      - /share/Media/Series:/downloads
+      - /share/Media/Series:/tv
+      - /share/Download:/downloads
     networks:
       - qbittorrent-pia-vpn_default
 
