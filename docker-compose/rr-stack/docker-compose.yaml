@@ -13,8 +13,6 @@ services:
       - sonarr:/config
       - /share/Download:/tv
       - /share/Media/Series:/downloads
-    networks:
-      - qbittorrent-pia-vpn-default
 
 volumes:
   sonarr:
