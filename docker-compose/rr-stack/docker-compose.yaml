@@ -14,7 +14,7 @@ services:
         - PORT_FORWARDING=true
         - TZ=Asia/Tokyo
     volumes:
-        - pia-qbittorrent:/config
+        - /share/appdata/qbittorrent-vpn-pia:/config
         - /share/Download:/downloads
     ports:
         - 8888:8888
@@ -41,7 +41,6 @@ services:
 volumes:
   sonarr:
     external: true
-  pia-qbittorrent:
 
 networks:
   qbittorrent-pia-vpn_default:
