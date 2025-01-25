@@ -20,5 +20,6 @@ services:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
     command: tunnel run
+    network_mode: bridge
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
