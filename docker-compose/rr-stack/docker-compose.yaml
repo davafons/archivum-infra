@@ -87,7 +87,7 @@ services:
     depends_on:
       - pia-qbittorrent
     ports:
-      - 6767:6767
+      - 9117:9117
     environment:
       - PUID=1000
       - PGID=1000
