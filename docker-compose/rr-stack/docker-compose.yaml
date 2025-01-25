@@ -97,11 +97,31 @@ services:
       - /share/Download:/downloads
     networks:
       - qbittorrent-pia-vpn_default
+
+  tautilli_anilist:
+    image: rickdb/tautulli-plexanisync:latest
+    container_name: tautilli_anilist
+    restart: unless-stopped
+    ports:
+      - 45523:8181
+    environment:
+      - ANI_TOKEN=${ANI_TOKEN}
+      - ANI_USERNAME=${ANI_USERNAME}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_SECTION=${PLEX_SECTION}
+      - TZ=Asia/Tokyo
+    volumes:
+      - tautilli_anilist:/config
+    networks:
+      - qbittorrent-pia-vpn_default
+
 volumes:
   sonarr:
   radarr:
   bazarr:
   jackett:
+  tautilli_anilist:
 
 networks:
   qbittorrent-pia-vpn_default:
