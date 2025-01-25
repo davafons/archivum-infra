@@ -82,3 +82,6 @@ services:
       - photoprism:/photoprism/storage                   # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
 
+networks:
+  db_mariadb:
+    external: true
