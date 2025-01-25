@@ -1,0 +1,28 @@
+services:
+  postgre:
+    container_name: postgre_db
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=default
+    networks:
+      - postgre
+    volumes:
+      - postgre:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgre
+    networks:
+      - postgre
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin/
+
+volumes:
+  postgre:
+  pgadmin_data:
+
+networks:
+  postgre:
