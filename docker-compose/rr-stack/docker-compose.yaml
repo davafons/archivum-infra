@@ -60,10 +60,31 @@ services:
     networks:
       - qbittorrent-pia-vpn_default
 
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:development
+    container_name: bazarr
+    restart: unless-stopped
+    depends_on:
+      - pia-qbittorrent
+    ports:
+      - 6767:6767
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+    volumes:
+      - bazarr:/config
+      - /share/Media/Movies:/movies
+      - /share/Media/Series:/tv
+      - /share/Download:/downloads
+    networks:
+      - qbittorrent-pia-vpn_default
+
 volumes:
   sonarr:
     external: true
   radarr:
+  bazarr:
 
 networks:
   qbittorrent-pia-vpn_default:
