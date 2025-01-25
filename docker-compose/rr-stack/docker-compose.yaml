@@ -80,10 +80,28 @@ services:
     networks:
       - qbittorrent-pia-vpn_default
 
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    depends_on:
+      - pia-qbittorrent
+    ports:
+      - 6767:6767
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+    volumes:
+      - jackett:/config
+      - /share/Download:/downloads
+    networks:
+      - qbittorrent-pia-vpn_default
 volumes:
   sonarr:
   radarr:
   bazarr:
+  jackett:
 
 networks:
   qbittorrent-pia-vpn_default:
