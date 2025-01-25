@@ -15,6 +15,8 @@ services:
     image: dpage/pgadmin4
     depends_on:
       - postgre
+    ports:
+      - 15433:80
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
