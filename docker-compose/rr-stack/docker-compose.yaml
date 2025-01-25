@@ -55,7 +55,7 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - radarr:/config
-      - /share/Media/Series:/tv
+      - /share/Media/Movies:/movies
       - /share/Download:/downloads
     networks:
       - qbittorrent-pia-vpn_default
