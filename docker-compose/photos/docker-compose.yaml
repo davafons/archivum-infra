@@ -43,7 +43,7 @@ services:
       PHOTOPRISM_DATABASE_DRIVER: "mysql"            # MariaDB 10.5.12+ (MySQL successor) offers significantly better performance compared to SQLite
       PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB database server (hostname:port)
       PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB database schema name
-      PHOTOPRISM_DATABASE_USER: ${PHOTOPRISM_DATABASE_USER}         # MariaDB database user name
+      PHOTOPRISM_DATABASE_USER: ${PHOTOPRISM_DATABASE_USER}
       PHOTOPRISM_DATABASE_PASSWORD: ${PHOTOPRISM_DATABASE_PASSWORD}
       PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
       PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
@@ -76,7 +76,7 @@ services:
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
     volumes:
       # "/host/folder:/photoprism/folder"                # Example
-      - /share/media/Pictures/Library:/photoprism/originals               # Original media files (DO NOT REMOVE)
+      - /share/Media/Pictures/Library:/photoprism/originals               # Original media files (DO NOT REMOVE)
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
       # - "~/Import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - photoprism:/photoprism/storage                   # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
