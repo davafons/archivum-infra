@@ -10,6 +10,7 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - calibre:/config
+      - /share/Media/Books:/books
     ports:
       - 24080:8080
       - 24181:8181
