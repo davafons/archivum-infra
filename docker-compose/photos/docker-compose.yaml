@@ -157,8 +157,9 @@ services:
     working_dir: "/photoprism" # do not change or remove
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
     volumes:
-      - /share/Media/Pictures/Family:/photoprism/originals               # Original media files (DO NOT REMOVE)
-      - photoprism_family:/photoprism/storage                   # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
+      - /share/Media/Pictures/Family:/photoprism/originals
+      - /share/Media/Pictures/Family_Import:/photoprism/import
+      - photoprism_family:/photoprism/storage
 
 networks:
   db_mariadb:
