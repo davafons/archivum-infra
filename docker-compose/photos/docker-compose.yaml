@@ -1,4 +1,3 @@
-
 services:
   photoprism:
     image: photoprism/photoprism:latest
@@ -81,7 +80,10 @@ services:
       # - "~/Import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - photoprism:/photoprism/storage                   # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
-
 networks:
   db_mariadb:
     external: true
+
+volumes:
+  photoprism:
+
