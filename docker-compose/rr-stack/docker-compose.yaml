@@ -82,7 +82,6 @@ services:
 
 volumes:
   sonarr:
-    external: true
   radarr:
   bazarr:
 
