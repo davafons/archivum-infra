@@ -18,6 +18,8 @@ services:
     container_name: zigbee2mqtt
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
+    depends_on:
+      - eclipse_mosquitto
     privileged: true
     volumes:
       - zigbee2mqtt_data:/app/data
@@ -31,6 +33,21 @@ services:
       # Make sure this matched your adapter location
       - /dev/ttyUSB0:/dev/ttyUSB0
 
+  eclipse_mosquitto:
+    container_name: eclipse_mosquitto
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    volumes:
+      - mosquitto_config:/mosquitto/config
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    network_mode: host
+    environment:
+      - TZ=Asia/Japan
+
 volumes:
   ha_config:
   zigbee2mqtt_data:
+  mosquitto_config:
+  mosquitto_data:
+  mosquitto_log:
