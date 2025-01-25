@@ -16,6 +16,21 @@ services:
       - 24181:8181
       - 24081:8081
     restart: unless-stopped
+  komga:
+    image: gotson/komga:latest
+    container_name: komga
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+    volumes:
+      - komga:/config
+      - /share/Media/Comics/English:/manga-english
+      - /share/Media/Comics/Japanese:/manga-japanese
+    ports:
+      - 25600:25600
+    restart: unless-stopped
 
 volumes:
   calibre:
+  komga:
