@@ -63,6 +63,7 @@ services:
 volumes:
   sonarr:
     external: true
+  radarr:
 
 networks:
   qbittorrent-pia-vpn_default:
