@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   wg-easy:
     environment:
@@ -36,7 +35,7 @@ services:
       - PGID=1000
       - TZ=Asia/Tokyo
     volumes:
-      - syncthing_config:/config
+      - syncthing:/config
       - /share:/sync
     ports:
       - 8384:8384
@@ -47,4 +46,4 @@ services:
 
 volumes:
   wg_config:
-  syncthing_config:
+  syncthing:
