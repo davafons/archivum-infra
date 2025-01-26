@@ -104,6 +104,7 @@ services:
 
 volumes:
   qbittorrent:
+  qbittorrent_etc:
   sonarr:
   radarr:
   bazarr:
