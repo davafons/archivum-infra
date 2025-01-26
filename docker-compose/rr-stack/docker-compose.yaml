@@ -2,7 +2,7 @@ services:
   pia-qbittorrent:
     image: j4ym0/pia-qbittorrent
     container_name: pia-qbittorrent
-    restart: never
+    restart: no
     ports:
         - 8888:8888
     cap_add:
