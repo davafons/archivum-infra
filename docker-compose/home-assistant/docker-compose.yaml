@@ -13,6 +13,9 @@ services:
       - PGID=1000
       - TZ=Asia/Tokyo
     network_mode: host
+    devices:
+      # Make sure this matched your adapter location
+      - /dev/ttyUSB0:/dev/ttyUSB0
 
   zigbee2mqtt:
     container_name: zigbee2mqtt
