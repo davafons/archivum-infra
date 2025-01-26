@@ -3,22 +3,22 @@ services:
     image: j4ym0/pia-qbittorrent
     container_name: pia-qbittorrent
     restart: unless-stopped
-    cap_add:
-        - NET_ADMIN
-    environment:
-        - UID=1000
-        - GID=100
-        - REGION=Japan
-        - USER=${PIA_USER}
-        - PASSWORD=${PIA_PASSWORD}
-        - PORT_FORWARDING=true
-        - LEGACY_IPTABLES=true
-        - TZ=Asia/Tokyo
-    volumes:
-        - qbittorrent:/config
-        - /share/Download:/downloads
     ports:
         - 8888:8888
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - UID=1000
+      - GID=100
+      - REGION=Japan
+      - USER=${PIA_USER}
+      - PASSWORD=${PIA_PASSWORD}
+      - PORT_FORWARDING=true
+      - LEGACY_IPTABLES=true
+      - TZ=Asia/Tokyo
+    volumes:
+      - qbittorrent:/config
+      - /share/Download:/downloads
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -103,7 +103,6 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - tautilli_anilist_config:/config
-      - tautilli_anilist_mappings:/config
 
 volumes:
   qbittorrent:
