@@ -15,12 +15,10 @@ services:
         - LEGACY_IPTABLES=true
         - TZ=Asia/Tokyo
     volumes:
-        - /share/appdata/qbittorrent-vpn-pia:/config
+        - qbittorrent:/config
         - /share/Download:/downloads
     ports:
         - 8888:8888
-    networks:
-      - qbittorrent-pia-vpn_default
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -38,8 +36,6 @@ services:
       - sonarr:/config
       - /share/Media/Series:/tv
       - /share/Download:/downloads
-    networks:
-      - qbittorrent-pia-vpn_default
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -57,8 +53,6 @@ services:
       - radarr:/config
       - /share/Media/Movies:/movies
       - /share/Download:/downloads
-    networks:
-      - qbittorrent-pia-vpn_default
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:development
@@ -77,8 +71,6 @@ services:
       - /share/Media/Movies:/movies
       - /share/Media/Series:/tv
       - /share/Download:/downloads
-    networks:
-      - qbittorrent-pia-vpn_default
 
   jackett:
     image: lscr.io/linuxserver/jackett:latest
@@ -95,8 +87,6 @@ services:
     volumes:
       - jackett:/config
       - /share/Download:/downloads
-    networks:
-      - qbittorrent-pia-vpn_default
 
   tautilli_anilist:
     image: rickdb/tautulli-plexanisync:latest
@@ -112,17 +102,13 @@ services:
       - PLEX_SECTION=${PLEX_SECTION}
       - TZ=Asia/Tokyo
     volumes:
-      - tautilli_anilist:/config
-    networks:
-      - qbittorrent-pia-vpn_default
+      - tautilli_anilist_config:/config
+      - tautilli_anilist_mappings:/config
 
 volumes:
+  qbittorrent:
   sonarr:
   radarr:
   bazarr:
   jackett:
   tautilli_anilist:
-
-networks:
-  qbittorrent-pia-vpn_default:
-    external: true
