@@ -35,6 +35,17 @@ services:
     devices:
       # Make sure this matched your adapter location
       - /dev/ttyUSB0:/dev/ttyUSB0
+      
+  matter-server:
+    container_name: matter-server
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+    volumes:
+      - matter:/data
+      - /run/dbus:/run/dbus:ro
+    network_mode: host
 
   eclipse_mosquitto:
     container_name: eclipse_mosquitto
@@ -50,6 +61,7 @@ services:
 
 volumes:
   ha_config:
+  matter:
   zigbee2mqtt_data:
   mosquitto_config:
   mosquitto_data:
