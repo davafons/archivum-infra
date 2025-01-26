@@ -102,7 +102,7 @@ services:
       - PLEX_SECTION=${PLEX_SECTION}
       - TZ=Asia/Tokyo
     volumes:
-      - tautilli_anilist_config:/config
+      - tautilli_anilist:/config
 
 volumes:
   qbittorrent:
