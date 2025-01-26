@@ -2,14 +2,11 @@ services:
   pia-qbittorrent:
     image: j4ym0/pia-qbittorrent
     container_name: pia-qbittorrent
-    restart: no
     ports:
         - 8888:8888
     cap_add:
       - NET_ADMIN
     environment:
-      - UID=1000
-      - GID=100
       - REGION=Japan
       - USER=${PIA_USER}
       - PASSWORD=${PIA_PASSWORD}
@@ -18,6 +15,7 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - qbittorrent:/config
+      - qbittorrent_etc:/etc
       - /share/Download:/downloads
 
   sonarr:
