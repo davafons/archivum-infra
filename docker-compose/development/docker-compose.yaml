@@ -6,7 +6,7 @@ services:
     user: root
     restart: always
     ports:
-      - "8384:8080"
+      - "18384:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
