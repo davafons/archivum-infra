@@ -4,7 +4,7 @@ services:
     container_name: jenkins
     privileged: true
     user: root
-    restart: alwasy
+    restart: always
     ports:
       - "8080:8080"
       - "50000:50000"
