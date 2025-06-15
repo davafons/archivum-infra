@@ -2,7 +2,7 @@ services:
   mariadb:
     container_name: mariadb
     image: mariadb:11
-    restart: unless-stopped
+    restart: always
     stop_grace_period: 5s
     security_opt:
       - seccomp:unconfined
@@ -23,6 +23,7 @@ services:
   adminer:
     container_name: adminer
     image: adminer
+    restart: always
     ports:
       - 23499:8080
     environment:
@@ -35,6 +36,7 @@ services:
   postgre:
     container_name: postgre_db
     image: postgres:latest
+    restart: always
     ports:
       - 5432:5432
     environment:
@@ -48,6 +50,7 @@ services:
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
+    restart: always
     depends_on:
       - postgre
     ports:
