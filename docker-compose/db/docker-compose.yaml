@@ -59,6 +59,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     networks:
+      - kamal
       - postgre
     volumes:
       - pgadmin_data:/var/lib/pgadmin/
@@ -71,3 +72,5 @@ volumes:
 networks:
   mariadb:
   postgre:
+  kamal:
+    external: true
