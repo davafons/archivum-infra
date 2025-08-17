@@ -2,6 +2,7 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    user: davafons:davafons
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
@@ -18,6 +19,7 @@ services:
       disable: false
 
   immich-machine-learning:
+    user: davafons:davafons
     container_name: immich_machine_learning
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
@@ -26,12 +28,13 @@ services:
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
-      - model-cache:/cache
+      - ml-cache:/cache
     restart: always
     healthcheck:
       disable: false
 
   redis:
+    user: davafons:davafons
     container_name: immich_redis
     image: docker.io/valkey/valkey:8-bookworm@sha256:facc1d2c3462975c34e10fccb167bfa92b0e0dbd992fc282c29a61c3243afb11
     healthcheck:
@@ -39,6 +42,7 @@ services:
     restart: always
 
   database:
+    user: davafons:davafons
     container_name: immich_postgres
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:32324a2f41df5de9efe1af166b7008c3f55646f8d0e00d9550c16c9822366b4a
     environment:
@@ -49,10 +53,10 @@ services:
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
     volumes:
-      - immich-db:/var/lib/postgresql/data
+      - immich-database:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
 
 volumes:
-  model-cache:
-  immich-db:
+  ml-cache:
+  immich-database:
