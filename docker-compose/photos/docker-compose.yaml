@@ -8,6 +8,7 @@ services:
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       - ${UPLOAD_LOCATION}:/data
+      - ${IMMICH_HOME}/upload:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '2283:2283'
@@ -24,6 +25,9 @@ services:
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    volumes:
+      - ${IMMICH_HOME}/.var/cache:/cache
+      - ${IMMICH_HOME}/.var/.config:/.config
     # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
@@ -37,6 +41,8 @@ services:
     user: 1000:0
     container_name: immich_redis
     image: docker.io/valkey/valkey:8-bookworm@sha256:facc1d2c3462975c34e10fccb167bfa92b0e0dbd992fc282c29a61c3243afb11
+    volumes:
+      - ${IMMICH_HOME}/.var/data:/data
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
@@ -53,10 +59,6 @@ services:
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
     volumes:
-      - im-database:/var/lib/postgresql/data
+      - ${IMMICH_HOME}/.var/database:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
-
-volumes:
-  im-cache:
-  im-database:
