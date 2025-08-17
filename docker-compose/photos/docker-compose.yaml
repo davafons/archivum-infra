@@ -8,7 +8,6 @@ services:
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       - ${UPLOAD_LOCATION}:/data
-      - ${IMMICH_HOME}/upload:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '2283:2283'
