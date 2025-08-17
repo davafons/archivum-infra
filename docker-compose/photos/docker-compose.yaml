@@ -9,6 +9,7 @@ services:
     volumes:
       - ${UPLOAD_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
+      - /share/Media/Pictures:/pictures:ro
     ports:
       - '2283:2283'
     depends_on:
