@@ -28,7 +28,7 @@ services:
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
-      - ml-cache:/cache
+      - im-cache:/cache
     restart: always
     healthcheck:
       disable: false
@@ -53,10 +53,10 @@ services:
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
     volumes:
-      - immich-database:/var/lib/postgresql/data
+      - im-database:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
 
 volumes:
-  ml-cache:
-  immich-database:
+  im-cache:
+  im-database:
