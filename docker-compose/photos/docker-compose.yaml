@@ -26,7 +26,7 @@ services:
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     volumes:
-      - ${IMMICH_HOME}/.var/cache:/cache
+      - ${IMMICH_HOME}/.var/.cache:/.cache
       - ${IMMICH_HOME}/.var/.config:/.config
     # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
     #   file: hwaccel.ml.yml
