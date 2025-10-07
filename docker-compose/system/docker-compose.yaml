@@ -18,7 +18,7 @@ services:
         "/usr/bin/wait-for.sh",
         "-t",
         "0",
-        "db:3306",
+        "mariadb:3306",
         "--",
         "/docker-entrypoint.sh",
       ]
