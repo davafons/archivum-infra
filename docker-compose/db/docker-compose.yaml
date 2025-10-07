@@ -9,7 +9,7 @@ services:
       - apparmor:unconfined
     command: --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     volumes:
-      - mariadb:/var/lib/mysql
+      - db_mariadb:/var/lib/mysql
     networks:
       - passbolt-net
       - mariadb
@@ -47,7 +47,7 @@ services:
     networks:
       - postgre
     volumes:
-      - postgre:/var/lib/postgresql/data
+      - db_postgre:/var/lib/postgresql/data
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -66,8 +66,8 @@ services:
       - pgadmin_data:/var/lib/pgadmin/
 
 volumes:
-  mariadb:
-  postgre:
+  db_mariadb:
+  db_postgre:
   pgadmin_data:
 
 networks:
