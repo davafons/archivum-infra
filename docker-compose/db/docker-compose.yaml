@@ -48,7 +48,8 @@ services:
     networks:
       - postgre
     volumes:
-      - db_postgre:/var/lib/postgresql/data
+      - postgre:/var/lib/postgresql/data
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -67,10 +68,8 @@ services:
       - pgadmin_data:/var/lib/pgadmin/
 
 volumes:
-  db_mariadb:
-    external: true
-  db_postgre:
-    external: true
+  mariadb:
+  postgre:
   pgadmin_data:
 
 networks:
