@@ -11,6 +11,7 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     networks:
+      - passbolt-net
       - mariadb
     environment:
       MARIADB_AUTO_UPGRADE: "1"
@@ -73,4 +74,6 @@ networks:
   mariadb:
   postgre:
   kamal:
+    external: true
+  passbolt-net:
     external: true

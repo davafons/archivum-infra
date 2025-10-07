@@ -1,17 +1,32 @@
 services:
-  dockge:
-    image: louislam/dockge:1
-    restart: always
-    ports:
-      # Host Port : Container Port
-      - 5001:5001
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - dockge_data:/app/data
-      - /opt/stacks:/opt/stacks
+  passbolt:
+    image: passbolt/passbolt:latest-ce
+    restart: unless-stopped
+    depends_on:
+      - mariadb
     environment:
-      # Tell Dockge where is your stacks directory
-      - DOCKGE_STACKS_DIR=/opt/stacks
+      APP_FULL_BASE_URL: https://passbolt.local.davafons.com
+      DATASOURCES_DEFAULT_HOST: "mariadb"
+      DATASOURCES_DEFAULT_USERNAME: "${PASSBOLT_USER}"
+      DATASOURCES_DEFAULT_PASSWORD: "${PASSBOLT_PASSWORD}"
+      DATASOURCES_DEFAULT_DATABASE: "${PASSBOLT_DATABASE}"
+    networks:
+      - passbolt-net
+    volumes:
+      - gpg_volume:/etc/passbolt/gpg
+      - jwt_volume:/etc/passbolt/jwt
+    command:
+      [
+        "/usr/bin/wait-for.sh",
+        "-t",
+        "0",
+        "db:3306",
+        "--",
+        "/docker-entrypoint.sh",
+      ]
+    ports:
+      - 50280:80
+      - 502443:443
 
   wg-easy:
     environment:
@@ -59,6 +74,12 @@ services:
     restart: unless-stopped
 
 volumes:
-  dockge_data:
   wg_config:
   syncthing:
+  database_volume:
+  gpg_volume:
+  jwt_volume:
+
+networks:
+  passbolt-net:
+    external: true
