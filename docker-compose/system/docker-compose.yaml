@@ -25,8 +25,8 @@ services:
         "/docker-entrypoint.sh",
       ]
     ports:
-      - 50280:80
-      - 502443:443
+      - 5980:80
+      - 59443:443
 
   wg-easy:
     environment:
