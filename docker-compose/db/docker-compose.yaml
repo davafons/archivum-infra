@@ -47,7 +47,7 @@ services:
     networks:
       - postgre
     volumes:
-      - /share/appdata/db_postgre:/var/lib/postgresql/data
+      - postgre:/var/lib/postgresql/data
 
   pgadmin:
     container_name: pgadmin
@@ -68,6 +68,7 @@ services:
 
 volumes:
   pgadmin_data:
+  postgre:
 
 networks:
   mariadb:
