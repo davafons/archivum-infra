@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   cloudflare-ddns:
@@ -24,3 +24,12 @@ services:
     network_mode: host
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+
+  brigadasos-cloudflared:
+    container_name: brigadasos-cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    network_mode: host
+    environment:
+      - TUNNEL_TOKEN=${BRIGADASOS_TUNNEL_TOKEN}
