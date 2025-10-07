@@ -67,7 +67,9 @@ services:
 
 volumes:
   db_mariadb:
+    external: true
   db_postgre:
+    external: true
   pgadmin_data:
 
 networks:
