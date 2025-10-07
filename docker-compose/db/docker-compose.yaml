@@ -48,7 +48,7 @@ services:
     networks:
       - postgre
     volumes:
-      - postgre:/var/lib/postgresql/data
+      - /share/CACHEDEV2_DATA/Docker/postgre_data:/var/lib/postgresql/data
 
   pgadmin:
     container_name: pgadmin
