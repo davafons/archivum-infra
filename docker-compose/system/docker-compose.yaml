@@ -2,8 +2,6 @@ services:
   passbolt:
     image: passbolt/passbolt:latest-ce
     restart: unless-stopped
-    depends_on:
-      - mariadb
     environment:
       APP_FULL_BASE_URL: https://passbolt.local.davafons.com
       DATASOURCES_DEFAULT_HOST: "mariadb"
