@@ -37,6 +37,7 @@ services:
   postgre:
     container_name: postgre_db
     image: postgres:latest
+    privileged: true
     restart: always
     ports:
       - 5432:5432
