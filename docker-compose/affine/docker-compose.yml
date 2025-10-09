@@ -7,6 +7,8 @@ services:
     depends_on:
       affine_migration:
         condition: service_completed_successfully
+      redis:
+        condition: service_healthy
     networks:
       - affine-net
     volumes:
@@ -17,7 +19,7 @@ services:
       - .env
     environment:
       - REDIS_SERVER_HOST=redis
-      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
+      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgre_db:5432/${DB_DATABASE:-affine}
       - AFFINE_INDEXER_ENABLED=false
     restart: unless-stopped
 
@@ -35,11 +37,9 @@ services:
       - .env
     environment:
       - REDIS_SERVER_HOST=redis
-      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
+      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgre_db:5432/${DB_DATABASE:-affine}
       - AFFINE_INDEXER_ENABLED=false
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
 
