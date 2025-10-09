@@ -46,6 +46,7 @@ services:
       - POSTGRES_DB=default
     networks:
       - postgre
+      - affine-net
     volumes:
       - postgre:/var/lib/postgresql/data
 
@@ -62,7 +63,6 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     networks:
       - postgre
-      - affine-net
     volumes:
       - pgadmin_data:/var/lib/pgadmin/
 
