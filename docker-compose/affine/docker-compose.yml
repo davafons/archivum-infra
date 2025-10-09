@@ -12,11 +12,8 @@ services:
     networks:
       - affine-net
     volumes:
-      # custom configurations
       - affine_upload:/root/.affine/storage
       - affine_config:/root/.affine/config
-    env_file:
-      - .env
     environment:
       - REDIS_SERVER_HOST=redis
       - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgre_db:5432/${DB_DATABASE:-affine}
@@ -27,14 +24,11 @@ services:
     image: ghcr.io/toeverything/affine:${AFFINE_REVISION:-stable}
     container_name: affine_migration_job
     volumes:
-      # custom configurations
       - affine_upload:/root/.affine/storage
       - affine_config:/root/.affine/config
     command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
     networks:
       - affine-net
-    env_file:
-      - .env
     environment:
       - REDIS_SERVER_HOST=redis
       - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgre_db:5432/${DB_DATABASE:-affine}
