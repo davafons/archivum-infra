@@ -1,31 +1,4 @@
 services:
-  passbolt:
-    image: passbolt/passbolt:latest-ce
-    restart: unless-stopped
-    environment:
-      APP_FULL_BASE_URL: https://passbolt.local.davafons.com
-      DATASOURCES_DEFAULT_HOST: "mariadb"
-      DATASOURCES_DEFAULT_USERNAME: "${PASSBOLT_USER}"
-      DATASOURCES_DEFAULT_PASSWORD: "${PASSBOLT_PASSWORD}"
-      DATASOURCES_DEFAULT_DATABASE: "${PASSBOLT_DATABASE}"
-    networks:
-      - passbolt-net
-    volumes:
-      - gpg_volume:/etc/passbolt/gpg
-      - jwt_volume:/etc/passbolt/jwt
-    command:
-      [
-        "/usr/bin/wait-for.sh",
-        "-t",
-        "0",
-        "mariadb:3306",
-        "--",
-        "/docker-entrypoint.sh",
-      ]
-    ports:
-      - 5980:80
-      - 59443:443
-
   wg-easy:
     environment:
       - WG_HOST=${WG_HOST}
@@ -74,10 +47,3 @@ services:
 volumes:
   wg_config:
   syncthing:
-  database_volume:
-  gpg_volume:
-  jwt_volume:
-
-networks:
-  passbolt-net:
-    external: true

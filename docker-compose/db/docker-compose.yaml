@@ -11,7 +11,6 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     networks:
-      - passbolt-net
       - mariadb
     environment:
       MARIADB_AUTO_UPGRADE: "1"
@@ -46,7 +45,6 @@ services:
       - POSTGRES_DB=default
     networks:
       - postgre
-      - affine-net
     volumes:
       - postgre:/var/lib/postgresql/data
 
@@ -74,7 +72,3 @@ volumes:
 networks:
   mariadb:
   postgre:
-  passbolt-net:
-    external: true
-  affine-net:
-    external: true
