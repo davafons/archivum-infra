@@ -2,6 +2,8 @@ services:
   tandoor:
     restart: unless-stopped
     image: vabene1111/recipes
+    ports:
+      - 7832:80
     networks:
       - tandoor
     volumes:
