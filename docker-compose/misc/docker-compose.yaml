@@ -2,8 +2,6 @@ services:
   tandoor:
     restart: unless-stopped
     image: vabene1111/recipes
-    ports:
-      - 7832:80
     networks:
       - tandoor
     volumes:
@@ -12,7 +10,7 @@ services:
     environment:
       SECRET_KEY: ${SECRET_KEY}
       TZ: Asia/Tokyo
-      ALLOWED_HOSTS: recipes.davafons.cc
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       DB_ENGINE: django.db.backends.postgresql
       POSTGRES_HOST: postgre_db
       POSTGRES_PORT: 5432
