@@ -9,7 +9,7 @@ services:
       - mediafiles:/opt/recipes/mediafiles
     environment:
       SECRET_KEY: ${SECRET_KEY}
-      TZ: Japan/Tokyo
+      TZ: Asia/Tokyo
       ALLOWED_HOSTS: recipes.davafons.cc
       DB_ENGINE: django.db.backends.postgresql
       POSTGRES_HOST: postgre_db
