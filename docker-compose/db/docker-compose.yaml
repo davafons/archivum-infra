@@ -45,6 +45,7 @@ services:
       - POSTGRES_DB=default
     networks:
       - postgre
+      - tandoor
     volumes:
       - postgre:/var/lib/postgresql/data
 
@@ -72,3 +73,5 @@ volumes:
 networks:
   mariadb:
   postgre:
+  tandoor:
+    external: true

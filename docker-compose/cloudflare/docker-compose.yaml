@@ -25,6 +25,15 @@ services:
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
 
+  cc-cloudflared:
+    container_name: cc-cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    network_mode: host
+    environment:
+      - TUNNEL_TOKEN=${CC_TUNNEL_TOKEN}
+
   brigadasos-cloudflared:
     container_name: brigadasos-cloudflared
     image: cloudflare/cloudflared:latest

@@ -1,0 +1,27 @@
+services:
+  tandoor:
+    restart: unless-stopped
+    image: vabene1111/recipes
+    networks:
+      - tandoor
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - mediafiles:/opt/recipes/mediafiles
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      TZ: Japan/Tokyo
+      ALLOWED_HOSTS: recipes.davafons.cc
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: postgre_db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  staticfiles:
+  mediafiles:
+
+networks:
+  tandoor:
+    external: true
