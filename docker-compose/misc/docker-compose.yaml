@@ -12,6 +12,7 @@ services:
     environment:
       SECRET_KEY: ${SECRET_KEY}
       TZ: Asia/Tokyo
+      FDC_API_KEY: ${FDC_API_KEY}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       DB_ENGINE: django.db.backends.postgresql
       POSTGRES_HOST: postgre_db
