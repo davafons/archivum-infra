@@ -43,7 +43,7 @@ services:
     image: node:20-alpine
     container_name: happy
     working_dir: /obsidian
-    command: sh -c "npm install -g happy-coder && happy "
+    command: sh -c "npm install -g happy-coder && happy --yolo"
     environment:
       - TZ=Asia/Tokyo
     volumes:
