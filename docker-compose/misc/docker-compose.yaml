@@ -38,6 +38,17 @@ services:
       - 3980:3000
       - 3981:3001
 
+  happy:
+    restart: unless-stopped
+    image: ghcr.io/slopus/happy:latest
+    container_name: happy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+    volumes:
+      - /share/Documents/Obsidian:/obsidian
+
 volumes:
   staticfiles:
   mediafiles:
