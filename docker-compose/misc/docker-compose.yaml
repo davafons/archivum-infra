@@ -21,9 +21,26 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
+  obsidian:
+    restart: unless-stopped
+    image: lscr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+    volumes:
+      - obsidian_config:/config
+    ports:
+      - 3000:3000
+      - 3001:3001
+
 volumes:
   staticfiles:
   mediafiles:
+  obsidian_config:
 
 networks:
   tandoor:
