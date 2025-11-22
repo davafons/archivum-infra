@@ -33,6 +33,7 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - obsidian_config:/config
+      - /share/Documents/Obsidian:/obsidian
     ports:
       - 3980:3000
       - 3981:3001
