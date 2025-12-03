@@ -1,0 +1,158 @@
+services:
+  dawarich_app:
+    image: freikin/dawarich:latest
+    container_name: dawarich_app
+    volumes:
+      - dawarich_public:/var/app/public
+      - dawarich_watched:/var/app/tmp/imports/watched
+      - dawarich_storage:/var/app/storage
+    networks:
+      - dawarich
+    ports:
+      - "${DAWARICH_APP_PORT:-3000}:3000"
+    stdin_open: true
+    tty: true
+    entrypoint: web-entrypoint.sh
+    command: ['bin/rails', 'server', '-p', '3000', '-b', '::']
+    restart: on-failure
+    environment:
+      RAILS_ENV: production
+      # Shared Redis from db stack
+      REDIS_URL: redis://shared_redis:6379/1
+      # Shared PostgreSQL from db stack
+      DATABASE_HOST: postgre_db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: dawarich
+      # Application settings
+      MIN_MINUTES_SPENT_IN_CITY: ${MIN_MINUTES_SPENT_IN_CITY:-60}
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,dawarich.local}
+      TIME_ZONE: ${TIME_ZONE:-Asia/Tokyo}
+      APPLICATION_PROTOCOL: ${APPLICATION_PROTOCOL:-http}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # Logging
+      RAILS_LOG_TO_STDOUT: "true"
+      # Self-hosted settings
+      SELF_HOSTED: "true"
+      STORE_GEODATA: "true"
+      # Prometheus (optional)
+      PROMETHEUS_EXPORTER_ENABLED: ${PROMETHEUS_EXPORTER_ENABLED:-false}
+      PROMETHEUS_EXPORTER_HOST: ${PROMETHEUS_EXPORTER_HOST:-0.0.0.0}
+      PROMETHEUS_EXPORTER_PORT: ${PROMETHEUS_EXPORTER_PORT:-9394}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'"]
+      interval: 30s
+      retries: 10
+      start_period: 60s
+      timeout: 10s
+    depends_on:
+      - setup_db
+    deploy:
+      resources:
+        limits:
+          cpus: "${APP_CPU_LIMIT:-0.50}"
+          memory: ${APP_MEMORY_LIMIT:-4G}
+
+  dawarich_sidekiq:
+    image: freikin/dawarich:latest
+    container_name: dawarich_sidekiq
+    volumes:
+      - dawarich_public:/var/app/public
+      - dawarich_watched:/var/app/tmp/imports/watched
+      - dawarich_storage:/var/app/storage
+    networks:
+      - dawarich
+    stdin_open: true
+    tty: true
+    entrypoint: sidekiq-entrypoint.sh
+    command: ['sidekiq']
+    restart: on-failure
+    environment:
+      RAILS_ENV: production
+      # Shared Redis from db stack
+      REDIS_URL: redis://shared_redis:6379/1
+      # Shared PostgreSQL from db stack
+      DATABASE_HOST: postgre_db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: dawarich
+      # Application settings
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS:-localhost,dawarich.local}
+      BACKGROUND_PROCESSING_CONCURRENCY: ${BACKGROUND_PROCESSING_CONCURRENCY:-10}
+      APPLICATION_PROTOCOL: ${APPLICATION_PROTOCOL:-http}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # Logging
+      RAILS_LOG_TO_STDOUT: "true"
+      # Self-hosted settings
+      SELF_HOSTED: "true"
+      STORE_GEODATA: "true"
+      # Prometheus (optional)
+      PROMETHEUS_EXPORTER_ENABLED: ${PROMETHEUS_EXPORTER_ENABLED:-false}
+      PROMETHEUS_EXPORTER_HOST: ${PROMETHEUS_EXPORTER_HOST_SIDEKIQ:-dawarich_app}
+      PROMETHEUS_EXPORTER_PORT: ${PROMETHEUS_EXPORTER_PORT:-9394}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f sidekiq"]
+      interval: 30s
+      retries: 10
+      start_period: 60s
+      timeout: 10s
+    depends_on:
+      dawarich_app:
+        condition: service_healthy
+
+  # One-time setup container to create database and enable PostGIS
+  setup_db:
+    image: postgres:17-alpine
+    container_name: dawarich_setup
+    networks:
+      - dawarich
+    environment:
+      PGHOST: postgre_db
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: postgres
+      TARGET_DB: dawarich
+    command: >
+      sh -c "
+        echo 'Waiting for PostgreSQL to be ready...';
+        until pg_isready -h postgre_db -U ${POSTGRES_USER}; do
+          sleep 2;
+        done;
+        echo 'PostgreSQL is ready!';
+
+        echo 'Checking if database exists...';
+        if psql -lqt | cut -d \\| -f 1 | grep -qw dawarich; then
+          echo 'Database dawarich already exists';
+        else
+          echo 'Creating database dawarich...';
+          psql -c 'CREATE DATABASE dawarich;';
+          echo 'Enabling PostGIS extension...';
+          psql -d dawarich -c 'CREATE EXTENSION IF NOT EXISTS postgis;';
+          psql -d dawarich -c 'CREATE EXTENSION IF NOT EXISTS postgis_topology;';
+          echo 'Database setup complete!';
+        fi;
+        echo 'Setup finished';
+      "
+    restart: "no"
+
+volumes:
+  dawarich_public:
+  dawarich_watched:
+  dawarich_storage:
+
+networks:
+  dawarich:
+    external: true
