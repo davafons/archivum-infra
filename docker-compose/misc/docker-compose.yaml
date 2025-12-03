@@ -52,11 +52,28 @@ services:
     stdin_open: true
     tty: true
 
+  filebrowser:
+    restart: unless-stopped
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    ports:
+      - 3499:80
+    volumes:
+      - /share/Documents:/srv/Documents
+      - filebrowser_config:/config
+      - filebrowser_database:/database
+    environment:
+      - TZ=Asia/Tokyo
+      - PUID=1000
+      - PGID=1000
+
 volumes:
   staticfiles:
   mediafiles:
   obsidian_config:
   happy_config:
+  filebrowser_config:
+  filebrowser_database:
 
 networks:
   tandoor:
