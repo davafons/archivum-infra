@@ -1,0 +1,164 @@
+networks:
+  dawarich:
+
+services:
+  dawarich_redis:
+    image: redis:7.4-alpine
+    container_name: dawarich_redis
+    command: redis-server
+    networks:
+      - dawarich
+    volumes:
+      - dawarich_shared:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  dawarich_db:
+    image: postgis/postgis:17-3.5-alpine
+    # image: imresamu/postgis:17-3.5-alpine # If you're on ARM architecture, use this image instead
+    shm_size: 1G
+    container_name: dawarich_db
+    volumes:
+      - dawarich_db_data:/var/lib/postgresql/data
+      - dawarich_shared:/var/shared
+    networks:
+      - dawarich
+    environment:
+      POSTGRES_USER: $(POSTGRES_USER)
+      POSTGRES_PASSWORD: $(POSTGRES_PASSWORD)
+      POSTGRES_DB: $(POSTGRES_DB)
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_DB)"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    # command: postgres -c config_file=/etc/postgresql/postgresql.conf # Use custom config, uncomment if you want to use a custom config
+
+  dawarich_app:
+    image: freikin/dawarich:latest
+    container_name: dawarich_app
+    volumes:
+      - dawarich_public:/var/app/public
+      - dawarich_watched:/var/app/tmp/imports/watched
+      - dawarich_storage:/var/app/storage
+      - dawarich_db_data:/dawarich_db_data
+    networks:
+      - dawarich
+    ports:
+      - "$(DAWARICH_APP_PORT):3000"
+      # - "$(PROMETHEUS_PORT):9394" # Prometheus exporter, uncomment if needed
+    stdin_open: true
+    tty: true
+    entrypoint: web-entrypoint.sh
+    command: ['bin/rails', 'server', '-p', '3000', '-b', '::']
+    restart: on-failure
+    environment:
+      RAILS_ENV: $(RAILS_ENV)
+      REDIS_URL: $(REDIS_URL)
+      DATABASE_HOST: $(DATABASE_HOST)
+      DATABASE_PORT: $(DATABASE_PORT)
+      DATABASE_USERNAME: $(DATABASE_USERNAME)
+      DATABASE_PASSWORD: $(DATABASE_PASSWORD)
+      DATABASE_NAME: $(DATABASE_NAME)
+      MIN_MINUTES_SPENT_IN_CITY: $(MIN_MINUTES_SPENT_IN_CITY)
+      APPLICATION_HOSTS: $(APPLICATION_HOSTS)
+      TIME_ZONE: $(TIME_ZONE)
+      APPLICATION_PROTOCOL: $(APPLICATION_PROTOCOL)
+      PROMETHEUS_EXPORTER_ENABLED: $(PROMETHEUS_EXPORTER_ENABLED)
+      PROMETHEUS_EXPORTER_HOST: $(PROMETHEUS_EXPORTER_HOST)
+      PROMETHEUS_EXPORTER_PORT: $(PROMETHEUS_EXPORTER_PORT)
+      SECRET_KEY_BASE: $(SECRET_KEY_BASE)
+      RAILS_LOG_TO_STDOUT: $(RAILS_LOG_TO_STDOUT)
+      SELF_HOSTED: $(SELF_HOSTED)
+      STORE_GEODATA: $(STORE_GEODATA)
+    logging:
+      driver: "json-file"
+      options:
+        max-size: $(LOG_MAX_SIZE)
+        max-file: $(LOG_MAX_FILE)
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'"]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+    depends_on:
+      dawarich_db:
+        condition: service_healthy
+        restart: true
+      dawarich_redis:
+        condition: service_healthy
+        restart: true
+    deploy:
+      resources:
+        limits:
+          cpus: $(APP_CPU_LIMIT)
+          memory: $(APP_MEMORY_LIMIT)
+
+  dawarich_sidekiq:
+    image: freikin/dawarich:latest
+    container_name: dawarich_sidekiq
+    volumes:
+      - dawarich_public:/var/app/public
+      - dawarich_watched:/var/app/tmp/imports/watched
+      - dawarich_storage:/var/app/storage
+    networks:
+      - dawarich
+    stdin_open: true
+    tty: true
+    entrypoint: sidekiq-entrypoint.sh
+    command: ['sidekiq']
+    restart: on-failure
+    environment:
+      RAILS_ENV: $(RAILS_ENV)
+      REDIS_URL: $(REDIS_URL)
+      DATABASE_HOST: $(DATABASE_HOST)
+      DATABASE_PORT: $(DATABASE_PORT)
+      DATABASE_USERNAME: $(DATABASE_USERNAME)
+      DATABASE_PASSWORD: $(DATABASE_PASSWORD)
+      DATABASE_NAME: $(DATABASE_NAME)
+      APPLICATION_HOSTS: $(APPLICATION_HOSTS)
+      BACKGROUND_PROCESSING_CONCURRENCY: $(BACKGROUND_PROCESSING_CONCURRENCY)
+      APPLICATION_PROTOCOL: $(APPLICATION_PROTOCOL)
+      PROMETHEUS_EXPORTER_ENABLED: $(PROMETHEUS_EXPORTER_ENABLED)
+      PROMETHEUS_EXPORTER_HOST: $(PROMETHEUS_EXPORTER_HOST_SIDEKIQ)
+      PROMETHEUS_EXPORTER_PORT: $(PROMETHEUS_EXPORTER_PORT)
+      SECRET_KEY_BASE: $(SECRET_KEY_BASE)
+      RAILS_LOG_TO_STDOUT: $(RAILS_LOG_TO_STDOUT)
+      SELF_HOSTED: $(SELF_HOSTED)
+      STORE_GEODATA: $(STORE_GEODATA)
+    logging:
+      driver: "json-file"
+      options:
+        max-size: $(LOG_MAX_SIZE)
+        max-file: $(LOG_MAX_FILE)
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f sidekiq"]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+    depends_on:
+      dawarich_db:
+        condition: service_healthy
+        restart: true
+      dawarich_redis:
+        condition: service_healthy
+        restart: true
+      dawarich_app:
+        condition: service_healthy
+        restart: true
+
+volumes:
+  dawarich_db_data:
+  dawarich_shared:
+  dawarich_public:
+  dawarich_watched:
+  dawarich_storage:
