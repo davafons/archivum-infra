@@ -18,5 +18,13 @@ services:
       - GENERIC_TIMEZONE=Asia/Tokyo
     network_mode: host
 
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3288:8080"
+    volumes:
+      - open-webui:/app/backend/data
+
 volumes:
   n8n_data:
+  open-webui:
